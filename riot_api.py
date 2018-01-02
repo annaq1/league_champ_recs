@@ -5,7 +5,7 @@ import re
 import pickle
 #open_cv: freniel's suggestion
 
-RIOT_API_KEY = "RGAPI-dc2ffb94-4bf8-40ee-a04e-c63ceb78485f" #Expires once a day
+RIOT_API_KEY = "key" #Expires once a day
 BASE_SUMMONER_URL = "https://{}.api.riotgames.com/lol/summoner/v3/summoners/by-name/" #fill in region and name
 BASE_CHAMPS_URL = "https://{}.api.riotgames.com/lol/static-data/v3/champions"
 BASE_MASTERY_URL = "https://{}.api.riotgames.com/lol/champion-mastery/v3/champion-masteries/by-summoner/"
