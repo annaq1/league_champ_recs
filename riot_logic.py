@@ -1,21 +1,10 @@
-#Make class or namedtuple for summoner name
-#potential info to return:
-#number of hours spent playing league in the last week !!!
-#most played champ of all time (mastery)
-#most played champ in last 20 games
-#rank
-#winrate on certain champs
-
-
 ###Recommended champions based on the player's most-played champions
 """Algorithm:
-    1. Return top 3 champions based on mastery points (or 1 if 3 is too difficult) *
+    1. Return top 3 champions based on mastery points
     2. Make a list of champions with same tags as given champion
-    3. Make a list of champions with same tags as 3 champions
-    4. Sort list by number of most common attributes (recommended item build?)
-    5. Find top 3 champions on that list
-    6. Return recommended champions for the person to play, based on their top 3 champions
-    6.5 Alternatively, do this per champion instead of combining the 3. Trial and error to see which method is better
+    3. Sort list by number of common attributes
+    4. Return list containing only champions with top # of shared attributes, including ties
+    5. Print recommended champions for the person to play, based on their top 3 champions
 """
 
 from riot_api import *
@@ -109,20 +98,3 @@ def most_similar_champs(champ_id: str, champ_list: [str]) ->[str]:
 
     
     
-
-# if __name__ == "__main__":
-#     s1 = Summoner("laslow latte", "na1")
-#     print(s1.name, s1.summoner_level)
-#     print(s1.id)
-#     print(s1.top_three)
-#     print(CHAMPION_DICT)
-#     x = contains_tags(28)
-#     print("------")
-#     print(x)
-#     print(CHAMPION_DICT["28"]["name"])
-#     for champ in sorted(x, key = lambda y: number_similarities("28", y), reverse = True):
-#         print(CHAMPION_DICT[champ]["name"], number_similarities("28", champ))
-#     print(most_similar_champs("28", x))
-#     #most_similarities = sorted(x, key = lambda y: number_similarities("39", y))[0]
-#     #print(number_similarities("39", "13"))
-#         
