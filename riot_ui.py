@@ -30,16 +30,45 @@ def enter_region():
         else:
             return VALID_REGIONS[region]
 
+def recommend(champ_ids: [int]):
+    """Prints out recommendations for summoner based on a list of champions"""
+    if len(champ_ids) == 0:
+        print("Sorry! You do not have enough champion mastery information to generate your recommended champions.")
+    for i in range(len(champ_ids)):
+        print("Because your #{} champion is {}, you might also enjoy:".format(i+1, CHAMPION_DICT[str(champ_ids[i])]["name"]))
+        shared_tags_list = contains_tags(champ_ids[i])
+        suggestions = most_similar_champs(str(champ_ids[i]), shared_tags_list)
+        if len(suggestions) >= 3:
+            for i in range(len(suggestions[:-1])):
+                print(CHAMPION_DICT[suggestions[i]]["name"], end = ", ")
+            print("and " + CHAMPION_DICT[suggestions[-1]]["name"])
+        if len(suggestions) == 2:
+            print(CHAMPION_DICT[suggestions[0]]["name"] + " and " + CHAMPION_DICT[suggestions[1]]["name"])
+        if len(suggestions) == 1:
+            print(CHAMPION_DICT[suggestions[0]]["name"])
+        print()
      
 
 
 
 def user_interface():
-    """User interface. Prompts user for summoner name and region. Prints user's current top
+    """Simple user interface. Prompts user for summoner name and region. Prints user's current top
     3 champions, and prints 3 suggested champions they might like based on those top 3."""
     print("Hello! Enter your summoner name and region to see your suggested champions.")
-    summoner_name = enter_summoner_name()
-    region = enter_region()
+    worked = False
+    while not worked:
+        try:
+            name = enter_summoner_name()
+            region = enter_region()
+            summoner = Summoner(name, region)
+            top3 = summoner.top_three #need to account for if this number is 0
+            worked = True
+        except urllib.error.HTTPError:
+            print("That summoner does not exist for this region. Please try again.")
+    print()
+    recommend(top3)
+    
+    
 
 
 

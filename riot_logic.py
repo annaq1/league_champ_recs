@@ -14,11 +14,12 @@
     3. Make a list of champions with same tags as 3 champions
     4. Sort list by number of most common attributes (recommended item build?)
     5. Find top 3 champions on that list
-    6. Return 3 recommended champions for the person to play
+    6. Return recommended champions for the person to play, based on their top 3 champions
     6.5 Alternatively, do this per champion instead of combining the 3. Trial and error to see which method is better
 """
 
 from riot_api import *
+from collections import defaultdict
     
 CHAMPION_DICT = build_champion_file()["data"]
 
@@ -73,7 +74,7 @@ def contains_tags(champ_id: int) -> {str}:
 
 
 
-def number_similarities(id1: str, id2: str):
+def number_similarities(id1: str, id2: str) -> int:
     """Compares 2 champions and returns a number: the number of similarities the stats of id2 has with id1.
     1. Checks attackrange. If they are within 25 range of each other, add 3 points
     2. Checks armor. If they are within 10 armor of each other, add 2 points
@@ -91,34 +92,37 @@ def number_similarities(id1: str, id2: str):
     if abs(info1["hp"] - info2["hp"]) <=20: num +=1 #3
     if abs(info1["mp"] - info2["mp"]) <=50: num +=1 #4
     if abs(info1["movespeed"] - info2["movespeed"]) <=5: num +=1 #5    
-    if CHAMPION_DICT[id1]["tags"] == CHAMPION_DICT[id2]["tags"]: num +=2 #6
+    if CHAMPION_DICT[id1]["tags"] == CHAMPION_DICT[id2]["tags"]: num +=1 #6
     if CHAMPION_DICT[id1]["partype"] == CHAMPION_DICT[id2]["partype"]: num += 1 #7
     return num
 
-    
-    
-    
+
+
+def most_similar_champs(champ_id: str, champ_list: [str]) ->[str]:
+    """Takes champion id and list of champions and returns a list of champion id's that correspond to the 
+    max number calculated in number_similarities. Champ_list is list returned from contains_tags"""
+    D = defaultdict(list)
+    for champ in champ_list:
+        D[number_similarities(champ_id, champ)].append(champ)
+    return D[sorted(dict(D), reverse = True)[0]]
 
 
     
-
-
-
-    
     
 
-if __name__ == "__main__":
-    s1 = Summoner("laslow latte", "na1")
-    print(s1.name, s1.summoner_level)
-    print(s1.id)
-    print(s1.top_three)
-    print(CHAMPION_DICT)
-    x = contains_tags(238)
-    print("------")
-    print(x)
-    print(CHAMPION_DICT["238"]["name"])
-    for champ in sorted(x, key = lambda y: number_similarities("238", y), reverse = True):
-        print(CHAMPION_DICT[champ]["name"], number_similarities("238", champ))
-    #most_similarities = sorted(x, key = lambda y: number_similarities("39", y))[0]
-    #print(number_similarities("39", "13"))
-        
+# if __name__ == "__main__":
+#     s1 = Summoner("laslow latte", "na1")
+#     print(s1.name, s1.summoner_level)
+#     print(s1.id)
+#     print(s1.top_three)
+#     print(CHAMPION_DICT)
+#     x = contains_tags(28)
+#     print("------")
+#     print(x)
+#     print(CHAMPION_DICT["28"]["name"])
+#     for champ in sorted(x, key = lambda y: number_similarities("28", y), reverse = True):
+#         print(CHAMPION_DICT[champ]["name"], number_similarities("28", champ))
+#     print(most_similar_champs("28", x))
+#     #most_similarities = sorted(x, key = lambda y: number_similarities("39", y))[0]
+#     #print(number_similarities("39", "13"))
+#         
