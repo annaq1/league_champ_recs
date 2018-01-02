@@ -5,7 +5,7 @@ import re
 import pickle
 #open_cv: freniel's suggestion
 
-RIOT_API_KEY = "key" #Expires once a day
+RIOT_API_KEY = "RGAPI-dc2ffb94-4bf8-40ee-a04e-c63ceb78485f" #Expires once a day
 BASE_SUMMONER_URL = "https://{}.api.riotgames.com/lol/summoner/v3/summoners/by-name/" #fill in region and name
 BASE_CHAMPS_URL = "https://{}.api.riotgames.com/lol/static-data/v3/champions"
 BASE_MASTERY_URL = "https://{}.api.riotgames.com/lol/champion-mastery/v3/champion-masteries/by-summoner/"
@@ -69,7 +69,7 @@ def build_champion_file():
         except EOFError:
             raise FileNotFoundError
     except FileNotFoundError:
-        champ_dict = get_dict(build_champion_url(tags = ["partype", "stats", "tags"]))
+        champ_dict = get_dict(build_champion_url(tags = ["partype", "stats", "tags"], data_by_id = True))
         with open("champions.txt", "wb") as file:
             pickle.dump(champ_dict, file)
         return champ_dict
@@ -90,33 +90,7 @@ def get_dict(url: str)-> dict:
     
     finally:
         if response != None: #close response once we are done
-            response.close()
-
-
-
-
-if __name__ == "__main__":
-    pass
-    #champ_dict = build_champion_file()
-    #print(champ_dict)
-    #url = build_summoner_url("na1", "laslow latte")
-    #json_dict = get_dict(url)
-    #print(json_dict)
-#     champ_url = build_champion_url(tags = ["partype", "stats", "tags"], champ_id = 39)
-#     print(champ_url)
-#     champ_dict = get_dict(champ_url)
-#     print(champ_dict)
-    #mastery_url = build_mastery_url("na1", 76782945)
-    #mastery_dict = get_dict(mastery_url)
-    #print(mastery_url)
-    #for item in mastery_dict:
-    #    print(item)
-    
-    
-    
-    
-    
-    
+            response.close()    
     
     
     

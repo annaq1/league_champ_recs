@@ -10,7 +10,7 @@ def enter_summoner_name():
     return summoner name"""
     valid = False
     while not valid:
-        summoner_name = input("Please enter your summoner name: ")
+        summoner_name = input("Please enter your summoner name: ").strip()
         pat = re.compile("^(\w|\.|\s)+$")
         valid = pat.match(summoner_name)
         if not valid:
@@ -23,7 +23,7 @@ def enter_region():
     for use in urls and returns"""
     valid = False
     while not valid:
-        region = input("Please enter your region: ").upper()
+        region = input("Please enter your region: ").upper().strip()
         if region not in VALID_REGIONS:
             regions = " ".join(x for x in sorted(VALID_REGIONS))
             print("Please enter a valid region. Valid regions: " + regions.strip() + ".")

@@ -57,34 +57,55 @@ class Summoner:
     #def most_played(self): #returns most-played champion in past week
     
     
-# Sadly doesn't work because it limits to 10 requests per hour. Change it so that I write all the champion data to a file
-# and then use that file in order to get the information.
-# class Champion:
-#     def __init__(self, champ_id: int):
-#         champ_url = build_champion_url(tags = ["partype", "stats", "tags"], champ_id = champ_id)
-#         champ_dict = get_dict(champ_url)
-#         print(champ_dict)
-#         
-#         self.id = champ_id
-#         self.name = champ_dict["name"]     
-#         self.tags = champ_dict["tags"]
-#         self.partype = champ_dict["partype"]
-#         self.armor = champ_dict["stats"]["armor"]
-#         self.attack_damage = champ_dict["stats"]["attackdamage"]
-#         self.attack_range = champ_dict["stats"]["attackrange"]
-#         self.hp = champ_dict["stats"]["hp"]
-#         self.mp = champ_dict["stats"]["mp"]
+
+def contains_tags(champ_id: int) -> {str}:
+    """Returns set of champions that has at least one tag in common with the given champion,
+    but excluding the given champion"""
+    same_tags = set()
+    champ_info = CHAMPION_DICT[str(champ_id)] #dictionary of information of champion
+    champ_tags = champ_info["tags"]
+    for c, c_info in CHAMPION_DICT.items():
+        if c != str(champ_id): #excludes the given champion
+            for tag in champ_tags:
+                if tag in c_info["tags"]:
+                    same_tags.add(c)
+    return same_tags
 
 
-def contains_tags(champ: str) -> [int]:
-    """Returns list of champions that has at least one tag in common with the given champion"""
+
+def number_similarities(id1: str, id2: str):
+    """Compares 2 champions and returns a number: the number of similarities the stats of id2 has with id1.
+    1. Checks attackrange. If they are within 25 range of each other, add 3 points
+    2. Checks armor. If they are within 10 armor of each other, add 2 points
+    3. Checks hp. If they are within 20 range of each other, add 1 point
+    4. Checks mp. If it is within 50 range of each other, add 1 point
+    5. Checks movespeed. If it is within 5 range of each other, add 1 point
+    6. Checks tags. If both tags match, add 2 points
+    7. Checks partype. If it matches, add 1 point
+    """
+    num = 0
+    info1 = CHAMPION_DICT[id1]["stats"]
+    info2 = CHAMPION_DICT[id2]["stats"]
+    if abs(info1["attackrange"] - info2["attackrange"]) <= 25: num +=3 #1
+    if abs(info1["armor"] - info2["armor"]) <= 10: num +=2 #2
+    if abs(info1["hp"] - info2["hp"]) <=20: num +=1 #3
+    if abs(info1["mp"] - info2["mp"]) <=50: num +=1 #4
+    if abs(info1["movespeed"] - info2["movespeed"]) <=5: num +=1 #5    
+    if CHAMPION_DICT[id1]["tags"] == CHAMPION_DICT[id2]["tags"]: num +=2 #6
+    if CHAMPION_DICT[id1]["partype"] == CHAMPION_DICT[id2]["partype"]: num += 1 #7
+    return num
+
+    
+    
+    
+
+
     
 
 
 
     
-        
-
+    
 
 if __name__ == "__main__":
     s1 = Summoner("laslow latte", "na1")
@@ -92,4 +113,12 @@ if __name__ == "__main__":
     print(s1.id)
     print(s1.top_three)
     print(CHAMPION_DICT)
+    x = contains_tags(238)
+    print("------")
+    print(x)
+    print(CHAMPION_DICT["238"]["name"])
+    for champ in sorted(x, key = lambda y: number_similarities("238", y), reverse = True):
+        print(CHAMPION_DICT[champ]["name"], number_similarities("238", champ))
+    #most_similarities = sorted(x, key = lambda y: number_similarities("39", y))[0]
+    #print(number_similarities("39", "13"))
         
